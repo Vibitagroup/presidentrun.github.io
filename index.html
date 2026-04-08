@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Black+Ops+One&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#050510;overflow:hidden;font-family:'Rajdhani',sans-serif}
+html,body{height:100%;width:100%;touch-action:manipulation;-webkit-tap-highlight-color:transparent;background:#050510;overflow:hidden;font-family:'Rajdhani',sans-serif}
 #gw{position:relative;width:100%;height:570px;overflow:hidden}
 canvas{display:block;position:absolute;top:0;left:0}
 
@@ -45,7 +48,7 @@ canvas{display:block;position:absolute;top:0;left:0}
 #nameSection{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;width:280px}
 #nameSection label{font-family:'Rajdhani',sans-serif;font-size:13px;color:rgba(255,215,0,0.7);letter-spacing:4px;text-transform:uppercase;margin-bottom:8px}
 #playerName{
-  font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;
+  font-family:'Rajdhani',sans-serif;font-size:max(16px,18px);font-weight:700;
   color:#FFD700;background:rgba(255,215,0,0.06);
   border:1px solid rgba(255,215,0,0.35);border-radius:8px;
   padding:10px 18px;width:100%;text-align:center;
@@ -87,11 +90,114 @@ canvas{display:block;position:absolute;top:0;left:0}
 #locflag{font-size:26px;line-height:1.2}
 #locname{font-family:'Black Ops One',cursive;font-size:15px;color:#FFD700;letter-spacing:3px}
 #locsub{font-family:'Rajdhani',sans-serif;font-size:10px;color:rgba(255,200,100,0.6);letter-spacing:4px}
+
+/* ══ PHONE OPTIMISATIONS ══════════════════════════════════════════════════ */
+
+/* Jump button - big tap zone at bottom right during gameplay */
+#jumpBtn{
+  display:none;
+  position:absolute;
+  bottom:18px;right:16px;
+  width:82px;height:82px;
+  border-radius:50%;
+  background:rgba(255,215,0,0.18);
+  border:2.5px solid rgba(255,215,0,0.45);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  color:#FFD700;
+  font-size:30px;
+  line-height:82px;
+  text-align:center;
+  pointer-events:all;
+  user-select:none;
+  -webkit-user-select:none;
+  z-index:10;
+  transition:background 0.1s;
+}
+#jumpBtn:active{background:rgba(255,215,0,0.38);}
+
+@media (max-width:700px),(max-height:500px){
+  /* Show the jump button on phones */
+  #jumpBtn{display:block;}
+
+  /* Game wrapper fills full screen */
+  #gw{height:100svh;height:100vh;height:100dvh;}
+
+  /* HUD tighter */
+  #bar{padding:5px 10px;}
+  .hs,.hb{font-size:11px;letter-spacing:1px;}
+  .hsp{font-size:10px;letter-spacing:1px;padding:2px 8px;}
+  #playerdisp{font-size:10px;letter-spacing:2px;}
+
+  /* Overlays: scrollable, centered, safe-area aware */
+  #overlay,#gameover{
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:env(safe-area-inset-top,14px) 16px env(safe-area-inset-bottom,20px);
+    justify-content:center;
+    align-items:center;
+  }
+
+  /* Title */
+  .tm-line1{font-size:clamp(32px,9vw,56px);letter-spacing:2px;}
+  .tm-line2{font-size:clamp(14px,4.5vw,22px);letter-spacing:3px;margin-bottom:10px;}
+  .ts{font-size:8px;letter-spacing:5px;margin-bottom:10px;}
+
+  /* Leaderboard */
+  #lboard{width:min(92%,300px);margin-bottom:10px;}
+  #lboard-list li{font-size:12px;padding:3px 8px;}
+
+  /* Name input */
+  #nameSection{width:min(88%,300px);margin-bottom:12px;}
+  #nameSection label{font-size:11px;letter-spacing:2px;}
+  #playerName{font-size:16px;padding:11px 14px;letter-spacing:1px;}
+
+  /* Button */
+  .btn{font-size:15px;padding:14px 32px;letter-spacing:2px;min-width:190px;margin-top:8px;}
+  .hint{font-size:10px;letter-spacing:2px;margin-top:8px;}
+  .vb{font-size:9px;letter-spacing:3px;margin-top:10px;}
+  .parody{font-size:9px;max-width:92%;margin-top:4px;}
+  .copy{font-size:9px;letter-spacing:1px;}
+
+  /* Game over */
+  .got{font-size:clamp(30px,9vw,44px);letter-spacing:2px;}
+  .gos{font-size:clamp(16px,5vw,22px);letter-spacing:2px;}
+  .gob-row{font-size:12px;letter-spacing:1px;margin-bottom:12px;}
+  #go-lboard{width:min(92%,300px);}
+
+  /* Location banner */
+  #locbanner{top:36px;padding:5px 14px;}
+  #locflag{font-size:20px;}
+  #locname{font-size:12px;letter-spacing:2px;}
+  #locsub{font-size:8px;letter-spacing:2px;}
+}
+
+/* Tiny phones (iPhone SE, Galaxy A series) */
+@media (max-width:390px){
+  .tm-line1{font-size:30px;}
+  .tm-line2{font-size:13px;letter-spacing:2px;}
+  .ts{display:none;}
+  .btn{font-size:14px;padding:12px 24px;}
+  #jumpBtn{width:72px;height:72px;line-height:72px;font-size:26px;bottom:14px;right:12px;}
+}
+
+/* Landscape phone */
+@media (max-height:440px) and (orientation:landscape){
+  .tm-line1{font-size:28px;}
+  .tm-line2{font-size:13px;margin-bottom:6px;}
+  .ts,.parody,.copy,.vb{display:none;}
+  #lboard{display:none!important;}
+  #nameSection{margin-bottom:8px;}
+  .btn{padding:10px 26px;font-size:13px;}
+  #jumpBtn{bottom:10px;right:10px;width:66px;height:66px;line-height:66px;font-size:24px;}
+}
+
 </style>
 </head>
 <body>
 <div id="gw">
 <canvas id="gc"></canvas>
+<div id="jumpBtn" ontouchstart="jumpTouch(event)" onmousedown="jumpTouch(event)">▲</div>
 
 <!-- HUD -->
 <div id="hud">
@@ -181,20 +287,32 @@ function refreshBoards(){
   renderBoard('lboard-list2',s);
 }
 
-// ─── Canvas setup ─────────────────────────────────────────
+// ─── Canvas setup (mobile-aware) ─────────────────────────
 const canvas=document.getElementById('gc');
 const ctx=canvas.getContext('2d');
 const wrap=document.getElementById('gw');
-const CW=wrap.clientWidth,CH=570;
-canvas.width=CW;canvas.height=CH;
-canvas.style.width='100%';canvas.style.height=CH+'px';
+const isMobile=(window.innerWidth<=700||window.innerHeight<=500);
+
+// Use real screen dimensions on mobile so the game fills the screen
+const CW=wrap.clientWidth;
+const CH=isMobile?window.innerHeight:570;
+wrap.style.height=CH+'px';
+
+// Hi-DPI / Retina: scale canvas by devicePixelRatio for crisp rendering
+const DPR=Math.min(window.devicePixelRatio||1,2);
+canvas.width=Math.round(CW*DPR);
+canvas.height=Math.round(CH*DPR);
+canvas.style.width=CW+'px';
+canvas.style.height=CH+'px';
+ctx.scale(DPR,DPR);
+
 const GROUND_Y=CH-90;
 const MAX_SCORE=100000;
 
 let currentPlayer='PLAYER';
 let state='idle',score=0,hi=0,fr=0,spd=5,jc=0;
 let missiles=[],expl=[],mt=0,currentLoc=0;
-const TW=58,TH=96;
+const TW=isMobile&&CW<420?46:58,TH=isMobile&&CW<420?76:96;
 let TX=110,TY=GROUND_Y-TH,TVY=0;
 function onGround(){return TY>=GROUND_Y-TH;}
 
@@ -215,6 +333,7 @@ document.getElementById('playerName').addEventListener('keydown',e=>{if(e.key===
 function startGame(){
   document.getElementById('overlay').style.display='none';
   document.getElementById('gameover').style.display='none';
+  const jb=document.getElementById('jumpBtn');if(jb&&window.innerWidth<=700)jb.style.display='block';
   state='playing';score=0;fr=0;spd=5;jc=0;currentLoc=0;
   TY=GROUND_Y-TH;TVY=0;missiles=[];expl=[];mt=0;
   showLocationBanner(LOCATIONS[0]);
@@ -905,9 +1024,7 @@ function drawMissile(m){
     m.trail.forEach(t=>{const r=10*t.life;const fg=ctx.createRadialGradient(t.x,t.y,0,t.x,t.y,r);fg.addColorStop(0,`rgba(255,200,50,${t.life})`);fg.addColorStop(0.5,`rgba(255,80,0,${t.life*0.7})`);fg.addColorStop(1,'rgba(200,0,0,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.arc(t.x,t.y,r,0,Math.PI*2);ctx.fill();});
     const bg=ctx.createLinearGradient(x,y,x+mw,y);bg.addColorStop(0,'#AABBCC');bg.addColorStop(0.3,'#D0D8E4');bg.addColorStop(0.7,'#8A98AA');bg.addColorStop(1,'#607088');
     ctx.fillStyle=bg;ctx.beginPath();ctx.roundRect(x+mw*0.18,y+mh*0.18,mw*0.64,mh*0.72,4);ctx.fill();
-    const wg=ctx.createLinearGradient(x,y,x+mw,y+mh*0.2);wg.addColorStop(0,'#C0392B');wg.addColorStop(1,'#96181B');
-    ctx.fillStyle=wg;ctx.beginPath();ctx.moveTo(x+mw/2,y);ctx.lineTo(x+mw*0.18,y+mh*0.2);ctx.lineTo(x+mw*0.82,y+mh*0.2);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#C0392B';ctx.beginPath();ctx.moveTo(x+mw*0.18,y+mh*0.72);ctx.lineTo(x,y+mh);ctx.lineTo(x+mw*0.3,y+mh*0.9);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(x+mw*0.82,y+mh*0.72);ctx.lineTo(x+mw,y+mh);ctx.lineTo(x+mw*0.7,y+mh*0.9);ctx.closePath();ctx.fill();
+    const wg=ctx.createLinearGradient(x,y,x+mw,y+mh*0.2);wg.addColorStop(0,'#C0392B');wg.addColorStopTo(x,y+mh);ctx.lineTo(x+mw*0.3,y+mh*0.9);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(x+mw*0.82,y+mh*0.72);ctx.lineTo(x+mw,y+mh);ctx.lineTo(x+mw*0.7,y+mh*0.9);ctx.closePath();ctx.fill();
     [0.35,0.65].forEach(p=>{ctx.fillStyle='#E74C3C';ctx.beginPath();ctx.roundRect(x+mw*0.18,y+mh*p-3,mw*0.64,7,2);ctx.fill();});
     ctx.fillStyle='rgba(0,220,255,0.65)';ctx.strokeStyle='rgba(0,220,255,0.4)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x+mw/2,y+mh*0.45,mh*0.1,0,Math.PI*2);ctx.fill();ctx.stroke();
     ctx.fillStyle='rgba(255,255,255,0.07)';for(let s=0;s<3;s++)ctx.fillRect(x+mw*0.22,y+mh*(0.23+s*0.15),mw*0.56,4);
@@ -932,6 +1049,7 @@ function drawExp(){expl.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.35;p.life-=p.d;c
 function colCheck(m){const mg=10;return TX+mg<m.x+m.w-mg&&TX+TW-mg>m.x+mg&&TY+mg<m.y+m.h-mg&&TY+TH-mg>m.y+mg;}
 
 function jump(){if(state!=='playing')return;if(onGround()||jc<2){TVY=-17;jc++;}}
+function jumpTouch(e){e.preventDefault();e.stopPropagation();jump();}
 document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();jump();}});
 document.getElementById('gw').addEventListener('touchstart',e=>{e.preventDefault();jump();},{passive:false});
 document.getElementById('gw').addEventListener('mousedown',()=>jump());
@@ -944,7 +1062,7 @@ function loop(){
   requestAnimationFrame(loop);
   ctx.clearRect(0,0,CW,CH);
   fr++;if(score<MAX_SCORE)score++;
-  spd=5+score*0.0036;
+  spd=(5+score*0.0036)*(isMobile&&CW<420?0.78:1);
   const locIdx=Math.floor(score/1000)%LOCATIONS.length;
   if(locIdx!==currentLoc){currentLoc=locIdx;showLocationBanner(LOCATIONS[currentLoc]);}
   const loc=LOCATIONS[currentLoc];
@@ -968,7 +1086,7 @@ function loop(){
       document.getElementById('bv').textContent=hi.toLocaleString();
       renderBoard('lboard-list2',updated);
       hit=true;
-      setTimeout(()=>{document.getElementById('gameover').style.display='flex';},950);
+      const jbh=document.getElementById('jumpBtn');if(jbh)jbh.style.display='none';setTimeout(()=>{document.getElementById('gameover').style.display='flex';},950);
     }
     if(missiles[i].x+missiles[i].w<0)missiles.splice(i,1);
   }
@@ -979,7 +1097,7 @@ function loop(){
     document.getElementById('gobname').textContent=currentPlayer;
     document.getElementById('gobsc').textContent='100,000';
     renderBoard('lboard-list2',updated);
-    setTimeout(()=>{document.getElementById('gameover').style.display='flex';},500);
+    const jbh2=document.getElementById('jumpBtn');if(jbh2)jbh2.style.display='none';setTimeout(()=>{document.getElementById('gameover').style.display='flex';},500);
   }
   document.getElementById('sv').textContent=score>=MAX_SCORE?'100,000':score;
   document.getElementById('spv').textContent=(spd/5).toFixed(1)+'×';
